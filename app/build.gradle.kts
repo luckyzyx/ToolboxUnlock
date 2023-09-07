@@ -3,8 +3,8 @@ import java.util.Properties
 
 plugins {
     id("com.android.application")
-    id("org.jetbrains.kotlin.android") version "1.9.0"
-    id("com.google.devtools.ksp") version "1.9.0-1.0.11"
+    id("org.jetbrains.kotlin.android") version "1.9.10"
+    id("com.google.devtools.ksp") version "1.9.10-1.0.13"
 }
 
 android {
@@ -17,7 +17,7 @@ android {
         //noinspection OldTargetApi
         targetSdk = 33
         versionCode = getVersionCode()
-        versionName = "1.0"
+        versionName = "1.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -50,7 +50,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions { jvmTarget = "17" }
+    kotlin { jvmToolchain(17) }
     buildFeatures {
         viewBinding = true
         buildConfig = true
@@ -73,10 +73,13 @@ dependencies {
 
 fun getVersionCode(): Int {
     val propsFile = file("version.properties")
-    val properties = Properties()
-    properties.load(FileInputStream(propsFile))
-    var vCode = properties["versionCode"].toString().toInt()
-    properties["versionCode"] = (++vCode).toString()
-    properties.store(propsFile.writer(), null)
-    return vCode
+    if (propsFile.canRead()) {
+        val properties = Properties()
+        properties.load(FileInputStream(propsFile))
+        var vCode = properties["versionCode"].toString().toInt()
+        properties["versionCode"] = (++vCode).toString()
+        properties.store(propsFile.writer(), null)
+        println("versionCode -> $vCode")
+        return vCode
+    } else throw GradleException("无法读取 version.properties!")
 }

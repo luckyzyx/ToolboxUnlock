@@ -33,8 +33,9 @@ object MainHook : IYukiHookXposedInit {
                         if (instanceClass == DialogClass) return@afterHook
                         else if (instanceClass.hasMethod { emptyParam();returnType = IntType }) {
                             instance<Dialog>().setOnShowListener { d -> d?.dismiss() }
+//                            loggerD(msg = instance.javaClass.name)
+                            instance.javaClass.name.let { loadHooker(HookPremiumDialog(it)) }
                         }
-                        instanceClass.canonicalName?.let { loadHooker(HookPremiumDialog(it)) }
                     }
                 }
             }
@@ -43,7 +44,7 @@ object MainHook : IYukiHookXposedInit {
 
     private class HookPremiumDialog(val cls: String) : YukiBaseHooker() {
         override fun onHook() {
-            //Source Dialog -> super
+            //Source Dialog -> super -> remaining_time / premium_ticket
             cls.toClassOrNull()?.hook {
                 injectMember {
                     constructor { paramCount = 5 }

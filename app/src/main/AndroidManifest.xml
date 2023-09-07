@@ -17,7 +17,7 @@
             android:value="true" />
         <meta-data
             android:name="xposeddescription"
-            android:value="Toolbox Unlock Premium\nDev: 忆清鸣、luckyzyx" />
+            android:value="Toolbox For Minecraft:PE Premium Unlock\nDev: 忆清鸣、luckyzyx" />
         <meta-data
             android:name="xposedminversion"
             android:value="93" />
